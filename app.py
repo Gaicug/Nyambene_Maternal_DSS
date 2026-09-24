@@ -174,6 +174,19 @@ PAGE_THEMES = {
     "👶 AI — Baby Risk Prediction": {"main": "#059669", "soft": "#ECFDF5", "accent": "#047857"},
 }
 
+FLOATING_OBJECTS = {
+    "🏠 Hospital Overview": ("🏥", "Hospital", "Health Analytics"),
+    "👩 Maternal & ANC": ("👩‍🍼", "Maternal Care", "ANC Monitoring"),
+    "🤰 Pregnancy & Newborn": ("🤰", "Pregnancy", "Newborn Health"),
+    "🚼 Delivery Analysis": ("👶", "Delivery", "Outcome Analysis"),
+    "🩸 Maternal Safety": ("❤️", "Maternal Safety", "Clinical Monitoring"),
+    "🔎 Data Quality": ("🔎", "Data Quality", "Record Verification"),
+    "📊 Statistical Evidence": ("📊", "Statistics", "Evidence & Patterns"),
+    "🤖 AI — Delivery Prediction": ("🤖", "AI Prediction", "Delivery Support"),
+    "👶 AI — Baby Risk Prediction": ("🧠", "AI Screening", "Baby Risk"),
+}
+
+
 def apply_page_theme(page_name):
     theme = PAGE_THEMES.get(page_name, PAGE_THEMES["🏠 Hospital Overview"])
     main = theme["main"]
@@ -194,11 +207,38 @@ def apply_page_theme(page_name):
         .stTabs [aria-selected="true"] {{ color: {accent}; border-bottom-color: {main}; }}
         div[data-testid="stDataFrame"] {{ border-top: 3px solid {main}; }}
         h1, h2, h3 {{ color: {accent}; }}
+        .nyambene-floating-object {{
+            position: fixed; top: 92px; right: 24px; width: 108px; height: 108px;
+            border-radius: 24px; background: rgba(255,255,255,.94);
+            border: 2px solid {main}; box-shadow: 0 12px 32px rgba(15,23,42,.16);
+            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            z-index: 999; pointer-events: none; animation: nyambeneFloat 4s ease-in-out infinite;
+        }}
+        .nyambene-floating-icon {{ font-size: 38px; line-height: 1; margin-bottom: 7px; }}
+        .nyambene-floating-title {{ color: {accent}; font-size: 12px; font-weight: 800; text-align: center; line-height: 1.15; }}
+        .nyambene-floating-subtitle {{ color: {accent}; opacity: .68; font-size: 9px; text-align: center; margin-top: 3px; line-height: 1.1; }}
+        @keyframes nyambeneFloat {{ 0%,100% {{ transform: translateY(0); }} 50% {{ transform: translateY(-9px); }} }}
+        @media (max-width: 1100px) {{
+            .nyambene-floating-object {{ width: 88px; height: 88px; right: 14px; top: 88px; border-radius: 20px; }}
+            .nyambene-floating-icon {{ font-size: 30px; }} .nyambene-floating-title {{ font-size: 10px; }} .nyambene-floating-subtitle {{ display:none; }}
+        }}
+        @media (max-width: 768px) {{ .nyambene-floating-object {{ display:none; }} }}
         .theme-banner {{ background: {main}; color: white; padding: 14px 20px; border-radius: 14px; margin: 4px 0 18px 0; font-weight: 700; box-shadow: 0 4px 14px rgba(0,0,0,.10); }}
         .theme-banner small {{ opacity: .9; font-weight: 400; }}
     </style>
     <div class="theme-banner">Nyambene Subcounty Hospital <small>• {page_name}</small></div>
     """, unsafe_allow_html=True)
+
+    icon, title, subtitle = FLOATING_OBJECTS.get(page_name, ("🏥", "Nyambene DSS", "Health Analytics"))
+    st.markdown(
+        f"""<div class="nyambene-floating-object">
+            <div class="nyambene-floating-icon">{icon}</div>
+            <div class="nyambene-floating-title">{title}</div>
+            <div class="nyambene-floating-subtitle">{subtitle}</div>
+        </div>""",
+        unsafe_allow_html=True,
+    )
 
 # =============================================================================
 # SIDEBAR
